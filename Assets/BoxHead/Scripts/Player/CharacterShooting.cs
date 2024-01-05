@@ -27,12 +27,12 @@ public class CharacterShooting : MonoBehaviour
 
     private void Awake()
     {
-        _inputActions.Player.Shoot.Enable();
+        InitInput();
     }
 
     private void OnDestroy()
     {
-        _inputActions.Player.Shoot.Disable();
+        DisableInput();
     }
 
     private void OnValidate()
@@ -55,6 +55,28 @@ public class CharacterShooting : MonoBehaviour
         _curWeapon?.Show();
     }
 
+    private void InitInput()
+    {
+        _inputActions.Player.Shoot.Enable();
+        _inputActions.Player.Shoot.started += ShootStarted;
+        _inputActions.Player.Shoot.canceled += ShootStoped;
+
+        _inputActions.Player.WeaponAbility.Enable();
+        _inputActions.Player.WeaponAbility.started += WeaponAbilityStarted;
+        _inputActions.Player.WeaponAbility.canceled += WeaponAbilityStoped;
+    }
+
+    private void DisableInput()
+    {
+        _inputActions.Player.Shoot.Disable();
+        _inputActions.Player.Shoot.started -= ShootStarted;
+        _inputActions.Player.Shoot.canceled -= ShootStoped;
+
+        _inputActions.Player.WeaponAbility.Disable();
+        _inputActions.Player.WeaponAbility.started -= WeaponAbilityStarted;
+        _inputActions.Player.WeaponAbility.canceled -= WeaponAbilityStoped;
+    }
+
     private bool RotateWeaponToTarget(RaycastHit worldHit)
     {
         Vector3 playerLocHitDir = transform.InverseTransformDirection(worldHit.point - _curWeapon.transform.position);
@@ -70,6 +92,14 @@ public class CharacterShooting : MonoBehaviour
 
         return !Mathf.Approximately(clampedRotX, targetRotation.x) || !Mathf.Approximately(clampedRotY, targetRotation.y);
     }
+
+    private void WeaponAbilityStarted(InputAction.CallbackContext context) => _curWeapon.StartAbility(context);
+
+    private void WeaponAbilityStoped(InputAction.CallbackContext context) => _curWeapon.StopAbility(context);
+
+    private void ShootStarted(InputAction.CallbackContext context) => _curWeapon.StartShoot(context);
+
+    private void ShootStoped(InputAction.CallbackContext context) => _curWeapon.StopShoot(context);
 
     private void TryShoot(RaycastHit worldHit, bool rotationWasClamped)
     {

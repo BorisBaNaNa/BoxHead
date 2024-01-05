@@ -61,6 +61,16 @@ public class FlyingBullet : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void Activate(float damage, Vector3 dir)
+    {
+        _damage = damage;
+        transform.rotation = Quaternion.LookRotation(dir);
+
+        _curSpeed = _startSpeed;
+        _isActivated = true;
+        _collider.enabled = true;
+    }
+
     private void ApplyAcceleration()
     {
         if (_curFlyingTime < _accelerationDelay)
@@ -73,15 +83,5 @@ public class FlyingBullet : MonoBehaviour
     {
         Vector3 translation = _curSpeed * Time.deltaTime * Vector3.forward;
         transform.Translate(translation, Space.Self);
-    }
-
-    public void Activate(float damage, Vector3 dir)
-    {
-        _damage = damage;
-        transform.rotation = Quaternion.LookRotation(dir);
-
-        _curSpeed = _startSpeed;
-        _isActivated = true;
-        _collider.enabled = true;
     }
 }

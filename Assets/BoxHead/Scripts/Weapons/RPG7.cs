@@ -1,10 +1,18 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Zenject;
 using Zenject.SpaceFighter;
 
 public class RPG7 : Weapon
 {
     private FlyingBullet _bullet;
+    private FlyingBulletFactory _bulletFactory;
+
+    [Inject]
+    public void Construct(FlyingBulletFactory bulletFactory)
+    {
+        _bulletFactory = bulletFactory;
+    }
 
     protected override void Awake()
     {
@@ -17,7 +25,7 @@ public class RPG7 : Weapon
         DecrementAmmoAndRecordTime();
 
         Vector3 shootDir = (worldHit.point - transform.position).normalized;
-        _bullet.transform.SetParent(_bulletFactory.BulletParent);
+        _bullet.transform.SetParent(_bulletFactory.BulletsParent);
         _bullet.Activate(_damage, shootDir);
         _bullet = null;
 
@@ -32,6 +40,6 @@ public class RPG7 : Weapon
 
     private FlyingBullet BuildRoket()
     {
-        return _bulletFactory.BuildFlyType(_spawnPoint);
+        return _bulletFactory.Build(_spawnPoint);
     }
 }

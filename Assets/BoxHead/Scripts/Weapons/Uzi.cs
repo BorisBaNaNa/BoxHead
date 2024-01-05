@@ -1,13 +1,22 @@
 ﻿using UnityEngine;
+using Zenject;
 
 public class Uzi : Weapon
 {
+    private LineBulletFactory _bulletFactory;
+
+    [Inject]
+    public void Construct(LineBulletFactory bulletFactory)
+    {
+        _bulletFactory = bulletFactory;
+    }
+
     protected override ShootResult ShootImplementation(RaycastHit worldHit)
     {
         DecrementAmmoAndRecordTime();
 
         Vector3 shootDir = (worldHit.point - transform.position).normalized;
-        _bulletFactory.BuildLineType(_spawnPoint.position, shootDir, _damage, _attackDistance);
+        _bulletFactory.Build(_spawnPoint.position, shootDir, _damage, _attackDistance);
         return ShootResult.Success;
     }
 }

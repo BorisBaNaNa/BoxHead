@@ -13,16 +13,16 @@ public class GranadeGun : Weapon
     [SerializeField] private float _angleShoot = 45f;
 
     private IMovable _owner;
-    private PlayerInputActions _inputActions;
     private GranadeBullet _bullet;
     private float _secRateForceGrowth;
     private float _force;
+    private GranadeBulletFactory _bulletFactory;
 
     [Inject]
-    public void Construct(PlayerInputActions inputActions, IMovable owner)
+    public void Construct(GranadeBulletFactory bulletFactory, IMovable owner)
     {
-        _inputActions = inputActions;
         _owner = owner;
+        _bulletFactory = bulletFactory;
     }
 
     protected override void Awake()
@@ -35,12 +35,6 @@ public class GranadeGun : Weapon
     private void OnEnable()
     {
         _force = _baseForce;
-        _inputActions.Player.Shoot.canceled += DoShot;
-    }
-
-    private void OnDisable()
-    {
-        _inputActions.Player.Shoot.canceled -= DoShot;
     }
 
     protected override ShootResult ShootImplementation(RaycastHit _)
@@ -49,26 +43,26 @@ public class GranadeGun : Weapon
         return ShootResult.Success;
     }
 
-    protected override void ReloadImplementation()
-    {
-        base.ReloadImplementation();
-        _bullet = BuildGranade();
-    }
-
-    private void DoShot(InputAction.CallbackContext _)
+    public override void StopShoot(InputAction.CallbackContext context)
     {
         if (_bullet != null)
         {
             DecrementAmmoAndRecordTime();
 
             Vector3 shootDir = CalculateShootDir();
-            _bullet.transform.SetParent(_bulletFactory.BulletParent);
+            _bullet.transform.SetParent(_bulletFactory.BulletsParent);
             _bullet.Activate(_damage, Mathf.Min(_force, _maxForce), shootDir, _owner.GetVelocity());
 
             _bullet = null;
             Reload();
         }
         _force = _baseForce;
+    }
+
+    protected override void ReloadImplementation()
+    {
+        base.ReloadImplementation();
+        _bullet = BuildGranade();
     }
 
     private Vector3 CalculateShootDir()
@@ -81,6 +75,6 @@ public class GranadeGun : Weapon
 
     private GranadeBullet BuildGranade()
     {
-        return _bulletFactory.BuildGranade(_spawnPoint);
+        return _bulletFactory.Build(_spawnPoint);
     }
 }

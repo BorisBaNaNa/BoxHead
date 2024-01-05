@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Zenject;
 
 public abstract class Weapon : MonoBehaviour
@@ -26,18 +27,10 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected float _reloadDuration = 1f;
 
     protected CharacterShooting _characterShooting;
-    protected BulletFactory _bulletFactory;
     protected int _curAmmoCountInReseve;
     protected int _curAmmoCountInMagazine;
     protected float _lastShootingTime;
     protected bool _reloading;
-
-    [Inject]
-    public void Construct(BulletFactory bulletFactory)
-    {
-        _bulletFactory = bulletFactory;
-
-    }
 
     protected virtual void Awake()
     {
@@ -70,6 +63,14 @@ public abstract class Weapon : MonoBehaviour
         _characterShooting.StartCoroutine(ReloadImitateRoutine());
         return ShootResult.Success;
     }
+
+    public virtual void StartShoot(InputAction.CallbackContext context) { }
+
+    public virtual void StopShoot(InputAction.CallbackContext context) { }
+
+    public virtual void StartAbility(InputAction.CallbackContext context) { }
+
+    public virtual void StopAbility(InputAction.CallbackContext context) { }
 
     public virtual ShootResult Shoot(RaycastHit worldHit)
     {
