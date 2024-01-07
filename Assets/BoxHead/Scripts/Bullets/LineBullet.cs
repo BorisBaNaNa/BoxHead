@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LineBullet : MonoBehaviour
@@ -17,7 +18,7 @@ public class LineBullet : MonoBehaviour
         {
             distanceToTarget = hit.distance;
 
-            if (hit.transform.TryGetComponent<IDamagable>(out var damagable))
+            if (hit.transform.TryGetComponentInParent<IDamagable>(out var damagable))
                 damagable.TakeDamage(damage);
         }
 

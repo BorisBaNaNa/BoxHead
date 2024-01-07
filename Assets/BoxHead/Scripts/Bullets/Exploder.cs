@@ -8,7 +8,13 @@ public class Exploder
 
         foreach (var collider in colliders)
         {
-            if (!collider.TryGetComponent<IDamagable>(out var damagable))
+            if (collider.TryGetComponentInParent<IExplosive>(out var unstableObj))
+            {
+                unstableObj.ExplodeThis();
+                continue;
+            }
+
+            if (!collider.TryGetComponentInParent<IDamagable>(out var damagable))
                 continue;
 
             Vector3 closectPointOnCollider = collider.bounds.ClosestPoint(explodePoint);

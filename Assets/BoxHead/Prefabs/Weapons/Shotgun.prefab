@@ -336,5 +336,5 @@ MonoBehaviour:
   _damage: 5
   _attackDistance: 6
   _reloadDuration: 4
-  _bulletCount: 5
+  _bulletCount: 6
   _maxSpreadAngle: 30

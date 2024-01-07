@@ -18,7 +18,6 @@ public class PreviewObject : MonoBehaviour
     {
         if (_meshRenderers == null || _meshRenderers.Length == 0)
             CashMeshesForThis();
-        SetValidMat();
     }
 
     public void SetValidMat() => SetMaterialOnMesh(_validMaterial);
@@ -41,7 +40,12 @@ public class PreviewObject : MonoBehaviour
             return;
 
         foreach (var mesh in _meshRenderers)
-            mesh.material = newMaterial;
+        {
+            var materials = mesh.materials;
+            for (int i = 0; i < materials.Length; i++)
+                materials[i] = newMaterial;
+            mesh.materials = materials;
+        }
         _curMaterial = newMaterial;
     }
 

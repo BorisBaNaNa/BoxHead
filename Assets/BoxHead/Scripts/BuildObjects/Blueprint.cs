@@ -59,6 +59,8 @@ public class Blueprint
         return hitInfo.point.Floor(Axis.XZ) + new Vector3(0.5f, 0f, 0.5f);
     }
 
+    public Vector3 GetBuildingPos() => _preview.transform.position;
+
     private void CheckBuildValidity(RaycastHit hitInfo, Vector3 centerCheckPos, Vector3 playerPos)
     {
         float angleNormalToX = Vector3.Angle(hitInfo.normal, Vector3.up);

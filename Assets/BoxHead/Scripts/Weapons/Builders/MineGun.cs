@@ -23,7 +23,7 @@ public class MineGun : BuildWeapon
         DecrementAmmoAndRecordTime();
         Reload();
 
-        Vector3 centeredPos = Blueprint.GetCenteredPos(worldHit);
+        Vector3 centeredPos = _blueprint.GetBuildingPos();
         _bulletFactory.Build(centeredPos, _damage);
         return ShootResult.Success;
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Zenject;
 
 public class WeaponInstaller : MonoInstaller
@@ -14,12 +15,20 @@ public class WeaponInstaller : MonoInstaller
     [SerializeField] private BaseMine _baseMinePrefab;
     [SerializeField] private DistanceBomb _distanceBombPrefab;
 
+    [Header("Buildings")]
+    [SerializeField] private Transform _buildingsParent;
+    [SerializeField] private Barrel _barrelPrefab;
+    [SerializeField] private BaseWallPost _baseWallPostPrefab;
+    [SerializeField] private BaseWall _baseWallPrefab;
+
     public override void InstallBindings()
     {
         InstallBulletFactories();
         InstallDevices();
+        InstallBuildings();
 
-        Container.Bind<Exploder>()
+        Container
+            .Bind<Exploder>()
             .AsSingle();
     }
 
@@ -53,4 +62,23 @@ public class WeaponInstaller : MonoInstaller
             .AsSingle()
             .WithArguments(_devicesParent, _distanceBombPrefab);
     }
+
+    private void InstallBuildings()
+    {
+        Container
+            .Bind<BarrelFactory>()
+            .AsSingle()
+            .WithArguments(_buildingsParent, _barrelPrefab);
+
+        Container
+            .Bind<BaseWallPostFactory>()
+            .AsSingle()
+            .WithArguments(_buildingsParent, _baseWallPostPrefab);
+
+        Container
+            .Bind<BaseWallFactory>()
+            .AsSingle()
+            .WithArguments(_buildingsParent, _baseWallPrefab);
+    }
+
 }
