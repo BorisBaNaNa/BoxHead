@@ -20,10 +20,15 @@ public class DistanceBombGun : BuildWeapon
 
     protected override PreviewObject BuildPreview() => _bombPrevFactory.Build();
 
-    protected override ShootResult ShootImplementation(RaycastHit worldHit)
+    public override ShootResult Shoot(RaycastHit worldHit)
     {
         if (_abilityIsActive)
             return ExplodeAll();
+        return base.Shoot(worldHit);
+    }
+
+    protected override ShootResult ShootImplementation(RaycastHit worldHit)
+    {
         return BuildNewBomb(worldHit);
     }
 

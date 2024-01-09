@@ -5,6 +5,9 @@ using Zenject;
 
 public class DistanceBomb : MonoBehaviour
 {
+    [Header("Components")]
+    [SerializeField] private ExplodeRadiusController _explodeRadiusController;
+
     [Header("Stats")]
     [SerializeField] private LayerMask _exploseTarget;
     [SerializeField] private float _exploseDelay = 0.1f;
@@ -24,16 +27,17 @@ public class DistanceBomb : MonoBehaviour
     internal void Initialize(float damage)
     {
         _damage = damage;
+        _explodeRadiusController.Initialize(_exploseRadius);
     }
 
     internal void ShowExplodeSphere()
     {
-        Debug.Log($"ShowExplodeSphere {name}");
+        _explodeRadiusController.Show();
     }
 
     internal void HideExplodeSphere()
     {
-        Debug.Log($"HideExplodeSphere {name}");
+        _explodeRadiusController.Hide();
     }
 
     internal void Explode()
